@@ -1,0 +1,56 @@
+8 хостов /29 255.248,16 хостов /28 255.240,32 хоста /27 255.224,64 хостов /26 255.192
+iptables -t nat -A POSTROUTING –s (ip с 0 на конце)/28 –o eth0 -j MASQUERADE 	
+
+iptables-save > /root/rules
+@reboot /sbin/iptables-restore < /root/rules
+deb [trusted=yes] http://archive.deb.debian.org/debian buster main
+vtysh conf t int gre1ip ospf authentication message-digest ip ospf message-digest-key 1 md5 P@ssw0rd
+
+no-resolv
+dhcp-range=192.168.2.2,192.168.2.14,9999h
+dhcp-option=3,192.168.2.1
+dhcp-option=6,192.168.1.2
+interface=eth1.200
+
+no-resolv 
+domain=au-team.irpo
+server=/au-team.irpo/192.168.4.2(позже)
+server=8.8.8.8 
+interface=* 
+address=/hq-rtr.au-team.irpo/192.168.1.1
+ptr-record=1.1.168.192.in-addr.arpa,hq-rtr.au-team.irpo
+cname=moodle.au-team.irpo,hq-rtr.au-team.irpo
+
+useradd sshuser -u 1010
+mcedit /etc/sudoers
+usermod -aG wheel sshuser
+
+useradd net_admin -m
+mcedit /etc/sudoers
+net_admin	ALL=(ALL:ALL) NOPASSWD: ALL
+
+apt-get install openssh-common
+Port 2024
+MaxAuthTries 2
+AllowUsers sshuser
+PermitRootLogin no
+Banner /root/banner
+ssh sshuser@192.168.1.2 -p 2024
+
+apt-get install task-samba-dc
+nameserver 192.168.1.2
+rm -rf /etc/samba/smb.conf
+192.168.4.2	br-srv.au-team.irpo
+samba-tool domain provision
+AU-TEAM.IRPO
+AU-TEAM
+dc
+SAMBA_INTERNAL
+192.168.1.2 (Здесь вводим значение вручную)
+123qweR%
+mv -f /var/lib/samba/private/krb5.conf /etc/krb5.conf
+systemctl enable samba
+samba-tool user add user1.hq 123qweR%
+samba-tool group add hq
+samba-tool group addmembers hq user1.hq,user2.hq,user3.hq,user4.hq,user5.hq
+
